@@ -17,7 +17,8 @@ app.use(express.json())
 //connect to database
 connectToDB()
 
-// routing 
+// routing      
+// Now I have a CRUD application I guess
 app.get('/',(req, res) => {
     res.json({hello: 'world'})
 })
@@ -36,7 +37,7 @@ app.get('/cars/:id', async (req, res) => {
     // find the note using id
     const car = await Car.findById(carId)
     //respond with the note
-    res.json(car: car)
+    res.json({car: car})
 })
 
 app.post('/cars', async (req, res) => {
@@ -53,6 +54,36 @@ app.post('/cars', async (req, res) => {
 
     //respond with a new car
     res.json({car: car})
+})
+
+app.put('/cars/:id', async (req, res) => {
+    // get the ID off the url
+    const carId = req.params.id
+
+    //get the data off the req body
+    const title = req.body.title
+    const body = req.body.body
+
+    // find and update the record
+     await Car.findByIdAndUpdate(carId, {
+        title: title,
+        body: body
+    })
+
+    //find updated note
+    const car = await Car.findById(carId)
+
+    //respond with it
+    res.json({car: car})
+})
+
+app.delete('/cars/:id', async (req, res) => {
+    //get id off of URL
+    const carId = req.params.id 
+    //delete the record
+    await Car.deleteOne({id: carId})
+    //respond
+    res.json({ success: 'record deleted'})
 })
 
 //start our server
