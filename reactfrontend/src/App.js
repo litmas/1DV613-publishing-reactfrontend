@@ -8,6 +8,11 @@ function App() {
     title: '',
     body: ''
   })
+  const [updateCar, setUpdateCar] = useState({
+    _id: null,
+    title: '',
+    body: ''
+  })
   //use effect
   useEffect(() => {
     fetchCars()
@@ -58,22 +63,78 @@ const res = await axios.post('http://localhost:8080/cars', createCar)
     setCars(newCars)
   }
 
+  const handleUpdateFieldChange = (e) => {
+    const {value, name} = e.target
+
+    setUpdateCar({
+      ...updateCar,
+      [name]: value
+    })
+  }
+
+  const toggleUpdate = (car) => {
+    //set state on update form
+
+    setUpdateCar({title: car.title, body:car.body, _id: car._id})
+  }
+
+  const carUpdate = async (e) => {
+    e.preventDefault()
+    const {title, body} = updateCar
+    //send the update request
+    const res = await axios.put(`http://localhost:8080/cars/${updateCar._id}`, {title, body})
+    
+    //update state
+    const newUpdatedCar = [...cars]
+    const carIndex = cars.findIndex(car => {
+      return car._id === updateCar._id
+    })
+    newUpdatedCar[carIndex] = res.data.car
+
+    setCars (newUpdatedCar)
+
+    //clear state
+    setUpdateCar({
+      _id: null,
+      title: '',
+      body: ''
+    })
+  }
+
   return <><div>
     <h2>Cars: </h2>
     {cars && cars.map(car => {
       return (<div key={car._id}>
         <h3>{car.title}</h3>
-        <button onClick={() => deleteCar(car._id)}>Delete</button>
-      </div>)
-    })}
-  </div><div>
-      <h2>Create car:</h2>
+        <button onClick={() => deleteCar(car._id)}>Delete car</button>
+        <button onClick={() => toggleUpdate(car)}>Update car</button>
+      </div>) 
+      })}
+    </div>
+
+
+  {updateCar._id && ( 
+    <div>
+  <h2>Update car</h2>
+  <form onSubmit={carUpdate}>
+    <input onChange={handleUpdateFieldChange} value={updateCar.title} name='title'/>
+    <textarea onChange={handleUpdateFieldChange} value = {updateCar.body} name='body'/>
+    <button type='submit'>Update car</button>
+  </form>
+  </div> 
+  )}
+
+ 
+ 
+ {!updateCar._id && ( <div>
+          <h2>Create car:</h2>
       <form onSubmit={createdCar}>
         <input onChange={updateCreateCarField} value={createCar.title} name='title' />
         <textarea  onChange={updateCreateCarField} value={createCar.body} name='body' />
         <button type='submit'>Create car</button>
       </form>
-    </div></>
+    </div>)}
+    </>
 }
 
 export default App;
