@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+
 function App() {
 //state
   const[cars, setCars] = useState(null)
@@ -13,7 +14,7 @@ function App() {
   }, [])
 
 
-  //functions
+  // fetch car
   const fetchCars = async () => {
   //fetch notes
   const res = await axios.get('http://localhost:8080/cars') 
@@ -31,6 +32,7 @@ function App() {
     })
   }
 
+  //create car
   const createdCar = async (e) => {
     e.preventDefault()
 
@@ -39,6 +41,21 @@ const res = await axios.post('http://localhost:8080/cars', createCar)
     //update state
 
     setCars([...cars, res.data.car])
+
+    //clear state
+    setCreateCar({title: '', body: ''})
+  }
+
+  //delete car
+  const deleteCar = async (_id) => {
+    //delete the car
+    await axios.delete(`http://localhost:8080/cars/${_id}`)
+
+    //update state
+    const newCars = [...cars].filter(car => {
+      return car._id !== _id
+    })
+    setCars(newCars)
   }
 
   return <><div>
@@ -46,6 +63,7 @@ const res = await axios.post('http://localhost:8080/cars', createCar)
     {cars && cars.map(car => {
       return (<div key={car._id}>
         <h3>{car.title}</h3>
+        <button onClick={() => deleteCar(car._id)}>Delete</button>
       </div>)
     })}
   </div><div>
