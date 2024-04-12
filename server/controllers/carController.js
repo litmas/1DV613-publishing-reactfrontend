@@ -61,7 +61,7 @@ const deleteCar =  async (req, res) => {
     //get id off of URL
     const carId = req.params.id 
     //delete the record
-    await Car.deleteOne({id: carId})
+    await Car.deleteOne({_id: carId})
     //respond
     res.json({ success: 'record deleted'})
 }

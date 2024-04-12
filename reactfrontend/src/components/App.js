@@ -25,8 +25,7 @@ function App() {
   const res = await axios.get('http://localhost:8080/cars') 
   //set it on state
   setCars(res.data.cars)
-  console.log(res)
-  console.log(res)
+
   }
 
   const updateCreateCarField = (e) => {
