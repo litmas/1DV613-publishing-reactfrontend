@@ -21,7 +21,7 @@ async function signup(req, res) {
 }
 
 async function login(req, res) {
-
+    try {
     //get the email and password off of req body
     const {email, password} = req.body
     //find the user with the requested email
@@ -47,13 +47,35 @@ async function login(req, res) {
     
     //send it 
     res.sendStatus(200)
+    } catch(error) {
+        console.log('Error logging in', error)
+        res.sendStatus(400)
+    }
 }
 
-function logout(req, res) {}
+function checkAuth(req, res) {
+    try {
+    console.log(req.user)
+    res.sendStatus(200)
+    } catch(error) {
+        console.log('Error checking auth', error)
+        res.sendStatus(400)
+     }
+}
+
+function logout(req, res) {
+    try {
+    res.clearCookie('Authorization')
+    res.sendStatus(200 )
+    } catch(error) {
+        console.log('error logging out', error)
+        res.sendStatus(400)
+    }
+}
 
 module.exports = {
     signup,
     login,
-    logout
+    logout,
+    checkAuth
 }
-

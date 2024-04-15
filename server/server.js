@@ -10,13 +10,17 @@ const cookieParser  =require('cookie-parser')
 const connectToDB = require('./config/connecttoDB')
 const carsController = require('./controllers/carController')
 const userController = require('./controllers/userController')
+const requireAuth = require('./middleware/requireAuth')
 //create an express app
 const app = express()
 
 //configure express app
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
+app.use(cors({
+    origin: true,
+    credentials: true 
+}))
 
 //connect to database
 connectToDB()
@@ -32,6 +36,9 @@ app.post('/login', userController.login)
 
 //logging out
 app.get('/logout', userController.logout)
+
+// using middleware to check authorization
+app.get('/check-auth', requireAuth, userController.checkAuth)
 
 //fetching cars
 app.get('/cars', carsController.fetchCars)
