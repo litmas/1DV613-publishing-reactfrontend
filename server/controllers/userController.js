@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 async function signup(req, res) {
     try {
@@ -19,7 +20,28 @@ async function signup(req, res) {
     }
 }
 
-function login(req, res) {
+async function login(req, res) {
+
+    //get the email and password off of req body
+    const {email, password} = req.body
+    //find the user with the requested email
+    const user = await User.findOne({email})
+    if (!user) {return res.sendStatus(401)}
+
+    //compare sent in password with found user password hash
+    const passwordMatch = bcrypt.compareSync(password, user.password)
+    if (!passwordMatch){
+        return res.sendStatus(401)
+    }
+    //create a JWT token becauase they have valid credentials
+    const exp = Date.now() + 1000 * 60 * 60 * 24
+    var token = jwt.sign({ sub: user._id, exp }, process.env.SECRET)    //sub is the user and exp is the expiration date of the token
+    
+    //set the cookie
+    res.cookie("Authorization", token, {})
+    
+    //send it 
+    res.sendStatus(200)
 }
 
 function logout(req, res) {}
@@ -29,3 +51,4 @@ module.exports = {
     login,
     logout
 }
+
