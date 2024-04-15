@@ -38,7 +38,12 @@ async function login(req, res) {
     var token = jwt.sign({ sub: user._id, exp }, process.env.SECRET)    //sub is the user and exp is the expiration date of the token
     
     //set the cookie
-    res.cookie("Authorization", token, {})
+    res.cookie("Authorization", token, {
+        expires: new Date(exp),
+        httpOnly: true, 
+        sameSite: 'lax',    // should probably have true here but need to do more research on this
+        secure: process.env.NODE_ENV === 'produciton'
+    })
     
     //send it 
     res.sendStatus(200)
