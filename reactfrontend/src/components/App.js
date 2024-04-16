@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import carsStore from '../stores/carsStore'
 
 function App() {
+
+//stores
+const store = carsStore()
+
 //state
   const[cars, setCars] = useState(null)
   const [createCar, setCreateCar] = useState({
@@ -15,18 +20,8 @@ function App() {
   })
   //use effect
   useEffect(() => {
-    fetchCars()
+    store.fetchCars()
   }, [])
-
-
-  // fetch car
-  const fetchCars = async () => {
-  //fetch notes
-  const res = await axios.get('http://localhost:8080/cars') 
-  //set it on state
-  setCars(res.data.cars)
-
-  }
 
   const updateCreateCarField = (e) => {
     const {name, value} = e.target
@@ -102,7 +97,7 @@ const res = await axios.post('http://localhost:8080/cars', createCar)
 
   return <><div>
     <h2>Cars: </h2>
-    {cars && cars.map(car => {
+    {store.cars && store.cars.map(car => {
       return (<div key={car._id}>
         <h3>{car.title}</h3>
         <button onClick={() => deleteCar(car._id)}>Delete car</button>
