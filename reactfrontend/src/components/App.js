@@ -1,18 +1,11 @@
-import Cars from './cars'
-import UpdateCar from './updateCar'
-import CreateCar from './createCar'
+import CarsPage from '../pages/carsPage'
 
 function App() {
 
  return <>
-
-<Cars/>
-
-<UpdateCar/>
-
-<CreateCar/>
-
+<CarsPage/>
    </>
+   
 }
 
-export default App;
+export default App
