@@ -17,7 +17,7 @@ updateCar: {
    body: '',
 },
 fetchCars: async () => {
-   const res = await axios.get('http://localhost:8080/cars')
+   const res = await axios.get('/cars')
    set({ cars: res.data.cars })
 },
 updateCreateCarField: (e) => {
@@ -28,14 +28,14 @@ updateCreateCarField: (e) => {
 },
 createdCar: async (e) => {
    e.preventDefault()
-   const res = await axios.post('http://localhost:8080/cars', CarsStore.getState().createCar)
+   const res = await axios.post('/cars', CarsStore.getState().createCar)
    set((state) => ({
      cars: [...state.cars, res.data.car],
      createCar: { title: '', body: '' },
    }))
 },
 deleteCar: async (_id) => {
-   await axios.delete(`http://localhost:8080/cars/${_id}`)
+   await axios.delete(`/cars/${_id}`)
    set((state) => ({
      cars: state.cars.filter((car) => car._id !== _id),
    }))
@@ -54,7 +54,7 @@ toggleUpdate: (car) => {
 carUpdate: async (e) => {
    e.preventDefault()
    const { title, body } = CarsStore.getState().updateCar;
-   const res = await axios.put(`http://localhost:8080/cars/${CarsStore.getState().updateCar._id}`, { title, body })
+   const res = await axios.put(`/cars/${CarsStore.getState().updateCar._id}`, { title, body })
    set((state) => {
      const newUpdatedCar = [...state.cars]
      const carIndex = state.cars.findIndex((car) => car._id === CarsStore.getState().updateCar._id)
