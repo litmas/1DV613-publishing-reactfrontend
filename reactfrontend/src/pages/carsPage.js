@@ -10,6 +10,8 @@ export default function CarsPage() {
 
     useEffect(() => {
         store.fetchCars()
+        // lint has a problem with this where it wants all dependencies to be correctly specified which mine is not. I will add a disable lint for this line
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
   return <>

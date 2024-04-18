@@ -3,7 +3,6 @@ import carsStore from "../stores/carsStore"
 export default function UpdateCar() {
     const store = carsStore()
 
-    // Assuming you have an updateCar object in your store that holds the car's details
     if(!store.updateCar._id) {
         return <></>
     }
