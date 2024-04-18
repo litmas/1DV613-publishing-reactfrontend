@@ -41,19 +41,19 @@ app.get('/logout', userController.logout)
 app.get('/check-auth', requireAuth, userController.checkAuth)
 
 //fetching cars
-app.get('/cars', carsController.fetchCars)
+app.get('/cars', requireAuth, carsController.fetchCars)
 
 //fetching a single car
-app.get('/cars/:id', carsController.fetchOneCar)
+app.get('/cars/:id', requireAuth, carsController.fetchOneCar)
 
 //creating car
-app.post('/cars', carsController.createCar)
+app.post('/cars', requireAuth, carsController.createCar)
 
 //updating car
-app.put('/cars/:id', carsController.updateCar)
+app.put('/cars/:id', requireAuth, carsController.updateCar)
 
 //deleting car
-app.delete('/cars/:id', carsController.deleteCar)
+app.delete('/cars/:id', requireAuth, carsController.deleteCar)
 
 //start our server
 app.listen(process.env.PORT)  
